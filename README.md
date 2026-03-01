@@ -2,6 +2,10 @@
 
 A modern Angular single-page application for managing a personal book collection, tracking reading progress, discovering books from Google Books, and monitoring reading statistics through a dashboard.
 
+## Final Submission Links
+GitHub Repository: (https://github.com/uratabazi/Book-library)
+Live Demo (Netlify): (https://your-site-name.netlify.app](https://my-book-library-project.netlify.app)
+
 ## Setup Instructions
 
 ### Prerequisites
