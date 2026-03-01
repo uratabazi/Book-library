@@ -112,7 +112,7 @@ Screenshots are committed in the repository root and render in Markdown preview/
 	<img src="image-7.png" alt="Mobile search screenshot" width="220" />
 </p>
 
-## Rubric Mapping (Technical Implementation 40%)
+## Rubric Mapping 
 
 - **Proper use of routing:** Implemented multi-page SPA navigation with redirects, parameterized routes, and wildcard fallback (`/`, `/library`, `/library/:id`, `/search`, `/add`, `/add/:id`, `/about`).
 - **Component architecture:** Organized into focused standalone feature components (dashboard, list, details, form, search) plus shared UI components and app shell (header/footer).
