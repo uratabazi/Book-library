@@ -4,6 +4,7 @@ A modern Angular single-page application for managing a personal book collection
 
 ## Final Submission Links
 GitHub Repository: (https://github.com/uratabazi/Book-library)
+
 Live Demo (Netlify): (https://my-book-library-project.netlify.app/)
 
 ## Setup Instructions
