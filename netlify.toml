@@ -1,0 +1,3 @@
+[build]
+  command = "npm run build -- --watch=false"
+  publish = "dist/book-library/browser"
