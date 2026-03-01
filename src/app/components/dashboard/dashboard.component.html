@@ -1,0 +1,95 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <section class="dashboard-hero">
+    <div>
+      <p class="eyebrow">Your Reading Command Center</p>
+      <h2>Build momentum with every book.</h2>
+      <p class="subtitle">
+        Track progress, focus your next reads, and keep your library organized.
+      </p>
+      <div class="hero-actions">
+        <a routerLink="/library" class="btn-primary">Open Library</a>
+        <a routerLink="/add" class="btn-ghost">Add New Book</a>
+      </div>
+    </div>
+    <div class="hero-metrics">
+      <div>
+        <span>Total Books</span>
+        <strong>{{ vm.stats.totalBooks }}</strong>
+      </div>
+      <div>
+        <span>Completion</span>
+        <strong>{{ vm.stats.completionRate | number : '1.0-0' }}%</strong>
+      </div>
+      <div>
+        <span>Avg Rating</span>
+        <strong>{{ vm.stats.averageRating | number : '1.1-1' }}</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats-grid">
+    <article class="stat-card">
+      <p>Want to Read</p>
+      <h3>{{ vm.stats.wantToRead }}</h3>
+    </article>
+    <article class="stat-card">
+      <p>Currently Reading</p>
+      <h3>{{ vm.stats.currentlyReading }}</h3>
+    </article>
+    <article class="stat-card">
+      <p>Finished</p>
+      <h3>{{ vm.stats.finished }}</h3>
+    </article>
+    <article class="stat-card">
+      <p>Want to Re-read</p>
+      <h3>{{ vm.stats.wantToReread }}</h3>
+    </article>
+  </section>
+
+  <section class="goal-card">
+    <div>
+      <p class="goal-label">Yearly Reading Goal</p>
+      <h3>{{ vm.goal.currentFinished }} / {{ vm.goal.yearlyTarget }} books</h3>
+      <p class="goal-subtitle">{{ vm.goal.progressPercent | number : '1.0-0' }}% complete</p>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" [style.width.%]="vm.goal.progressPercent"></div>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="section-head">
+      <h3>Recently Added</h3>
+      <a routerLink="/library">View all →</a>
+    </div>
+    <div class="book-grid" *ngIf="vm.recentlyAdded.length; else noRecent">
+      <app-book-card
+        *ngFor="let book of vm.recentlyAdded"
+        [book]="book"
+        [clickable]="true"
+        (click)="onBookClick($event)"
+      ></app-book-card>
+    </div>
+    <ng-template #noRecent>
+      <p class="muted">No books yet — add your first title to get started.</p>
+    </ng-template>
+  </section>
+
+  <section class="section-block">
+    <div class="section-head">
+      <h3>Top Rated Picks</h3>
+      <a routerLink="/library">Go to library →</a>
+    </div>
+    <div class="book-grid" *ngIf="vm.topRated.length; else noTopRated">
+      <app-book-card
+        *ngFor="let book of vm.topRated"
+        [book]="book"
+        [clickable]="true"
+        (click)="onBookClick($event)"
+      ></app-book-card>
+    </div>
+    <ng-template #noTopRated>
+      <p class="muted">Rate completed books to unlock top picks.</p>
+    </ng-template>
+  </section>
+</ng-container>

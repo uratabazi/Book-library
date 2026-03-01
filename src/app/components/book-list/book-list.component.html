@@ -1,0 +1,102 @@
+<section class="library-shell">
+  <header class="library-head">
+    <div>
+      <p class="library-label">Library</p>
+      <h2>Your Collection</h2>
+    </div>
+  </header>
+
+  <section class="preset-shell">
+    <p>Saved Presets</p>
+    <div class="chip-wrap">
+      <button
+        type="button"
+        class="chip"
+        *ngFor="let preset of presets"
+        [class.chip-active]="selectedPresetName === preset.name"
+        (click)="applyPreset(preset)"
+      >
+        {{ preset.name }}
+      </button>
+    </div>
+  </section>
+
+  <section class="quick-filters" *ngIf="availableGenres.length || availableAuthors.length">
+    <div class="quick-filter-row" *ngIf="availableGenres.length">
+      <p>Genres</p>
+      <div class="chip-wrap">
+        <button
+          type="button"
+          class="chip"
+          *ngFor="let genre of availableGenres"
+          [class.chip-active]="filterByGenre === genre"
+          (click)="onGenreQuickFilter(genre)"
+        >
+          {{ genre }}
+        </button>
+      </div>
+    </div>
+
+    <div class="quick-filter-row" *ngIf="availableAuthors.length">
+      <p>Authors</p>
+      <div class="chip-wrap">
+        <button
+          type="button"
+          class="chip"
+          *ngFor="let author of availableAuthors"
+          [class.chip-active]="filterByAuthor === author"
+          (click)="onAuthorQuickFilter(author)"
+        >
+          {{ author }}
+        </button>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="clear-chip"
+      *ngIf="filterByGenre || filterByAuthor"
+      (click)="clearQuickFilters()"
+    >
+      Clear quick filters
+    </button>
+  </section>
+
+  <app-filter-bar
+    [availableStatuses]="['want-to-read','currently-reading','finished','want-to-reread']"
+    [availableGenres]="availableGenres"
+    (filtersChange)="onFiltersChange($event)"
+  ></app-filter-bar>
+
+  <ng-container *ngIf="books$ | async as books; else loadingTpl">
+    <ng-container *ngIf="!error; else errorTpl">
+      <ng-container *ngIf="books.length > 0; else empty">
+        <p class="result-count">{{ books.length }} book(s) shown</p>
+        <div class="book-grid">
+          <app-book-card
+            *ngFor="let book of books"
+            [book]="book"
+            [showStatusBadge]="true"
+            [showRatingStars]="true"
+            [clickable]="true"
+            (click)="onBookClick($event)"
+          ></app-book-card>
+        </div>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</section>
+
+<ng-template #loadingTpl>
+  <p class="loading">Loading your library…</p>
+</ng-template>
+
+<ng-template #errorTpl>
+  <p class="text-red-600">{{ error }}</p>
+</ng-template>
+
+<ng-template #empty>
+  <p class="text-center text-gray-500 mt-8">
+    No books in your library yet. Add your first book!
+  </p>
+</ng-template>

@@ -1,0 +1,121 @@
+<section class="search-shell">
+  <div class="search-head">
+    <h2>Find Your Next Great Read</h2>
+    <p>Search by title, author, topic, or ISBN and add books directly to your library.</p>
+  </div>
+
+  <div class="fun-bar">
+    <div class="chip-strip">
+      <button
+        type="button"
+        class="suggest-chip"
+        *ngFor="let term of suggestions"
+        (click)="applySuggestion(term)"
+      >
+        {{ term }}
+      </button>
+    </div>
+    <button type="button" class="surprise-btn" (click)="surpriseMe()">🎲 Surprise Me</button>
+  </div>
+
+    <div class="mood-row">
+      <span class="mood-label">Mood:</span>
+      <button
+        *ngFor="let mood of moods"
+        type="button"
+        class="mood-chip"
+        [class.active]="activeMoodLabel === mood.label"
+        (click)="applyMood(mood)">
+        <span class="emoji">{{ mood.emoji }}</span>
+        {{ mood.label }}
+      </button>
+    </div>
+
+  <form class="search-form" (ngSubmit)="onNewSearch()">
+    <input
+      [(ngModel)]="query"
+      name="query"
+      type="text"
+      [placeholder]="queryPlaceholder"
+      autocomplete="off"
+    />
+    <button type="submit" [disabled]="loading">{{ loading ? 'Searching…' : 'Search' }}</button>
+  </form>
+
+  <div class="search-options">
+    <label>
+      Search in
+      <select [(ngModel)]="scope" name="scope">
+        <option value="all">All fields</option>
+        <option value="intitle">Title</option>
+        <option value="inauthor">Author</option>
+        <option value="subject">Subject</option>
+      </select>
+    </label>
+
+    <label>
+      Sort
+      <select [(ngModel)]="sort" name="sort">
+        <option value="relevance">Relevance</option>
+        <option value="newest">Newest</option>
+      </select>
+    </label>
+  </div>
+
+  <p class="error" *ngIf="error">{{ error }}</p>
+  <p class="warning" *ngIf="warning">{{ warning }}</p>
+
+  <div class="toolbar" *ngIf="hasSearched && !loading && !error">
+    <p>
+      Showing {{ startIndex + 1 }}-{{ currentRangeEnd }} of {{ totalItems }} results
+    </p>
+    <div class="pager">
+      <button type="button" (click)="prevPage()" [disabled]="!canGoPrev">Previous</button>
+      <button type="button" (click)="nextPage()" [disabled]="!canGoNext">Next</button>
+    </div>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">Searching Google Books…</div>
+
+  <div class="results-grid" *ngIf="!loading && results.length > 0">
+    <article class="result-card" *ngFor="let item of results" (click)="openBookDetails(item)">
+      <img
+        *ngIf="item.volumeInfo.imageLinks?.thumbnail"
+        [src]="item.volumeInfo.imageLinks?.thumbnail"
+        [alt]="item.volumeInfo.title"
+      />
+      <div class="result-content">
+        <h3>{{ item.volumeInfo.title }}</h3>
+        <p class="author">{{ item.volumeInfo.authors?.join(', ') || 'Unknown author' }}</p>
+        <p class="meta" *ngIf="item.volumeInfo.publishedDate">
+          Published: {{ item.volumeInfo.publishedDate }}
+        </p>
+        <p class="description" *ngIf="item.volumeInfo.description">
+          {{ item.volumeInfo.description | slice: 0 : 180 }}...
+        </p>
+        <div class="result-actions">
+          <button
+            type="button"
+            (click)="$event.stopPropagation(); addToLibrary(item)"
+            [disabled]="addedIds.has(item.id)"
+          >
+            {{ addedIds.has(item.id) ? 'Added' : 'Add to Library' }}
+          </button>
+          <a
+            *ngIf="item.volumeInfo.infoLink"
+            [href]="item.volumeInfo.infoLink"
+            target="_blank"
+            rel="noopener"
+            (click)="$event.stopPropagation()"
+          >
+            Preview
+          </a>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <p class="empty" *ngIf="hasSearched && !loading && !results.length && !error">
+    No results found. Try a broader keyword.
+  </p>
+</section>

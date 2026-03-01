@@ -1,0 +1,87 @@
+<section class="about-shell">
+  <header class="hero">
+    <div>
+      <p class="eyebrow">About This Product</p>
+      <h2>Book Library is crafted for serious readers and builders.</h2>
+      <p>
+        Organize your reading life, discover titles effortlessly, and track progress with
+        meaningful, high-signal insights.
+      </p>
+      <section class="cta-row">
+        <a routerLink="/library" class="btn-primary">Browse Library</a>
+        <a routerLink="/search" class="btn-ghost">Search Books</a>
+      </section>
+    </div>
+
+    <section class="about-stats" *ngIf="stats$ | async as stats">
+      <article>
+        <span>Total Library</span>
+        <strong>{{ stats.totalBooks }}</strong>
+      </article>
+      <article>
+        <span>Books Finished</span>
+        <strong>{{ stats.finished }}</strong>
+      </article>
+      <article>
+        <span>Completion Rate</span>
+        <strong>{{ stats.completionRate | number : '1.0-0' }}%</strong>
+      </article>
+      <article>
+        <span>Average Rating</span>
+        <strong>{{ stats.averageRating | number : '1.1-1' }}</strong>
+      </article>
+    </section>
+  </header>
+
+  <section class="feature-grid">
+    <article *ngFor="let feature of features">
+      <h3>{{ feature.title }}</h3>
+      <p>{{ feature.description }}</p>
+    </article>
+  </section>
+
+  <section class="site-map">
+    <div class="site-map-head">
+      <p class="eyebrow">Explore The App</p>
+      <h3>Find every section in one place</h3>
+      <p>
+        Use this quick navigation map to jump to any core area of your reading tracker.
+      </p>
+    </div>
+
+    <div class="site-map-grid">
+      <article class="site-map-card" *ngFor="let section of siteMap">
+        <div class="site-map-top">
+          <span class="site-emoji">{{ section.emoji }}</span>
+          <h4>{{ section.title }}</h4>
+        </div>
+        <p>{{ section.description }}</p>
+        <a [routerLink]="section.route">{{ section.cta }} →</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="roadmap">
+    <h3>Reading Workflow</h3>
+    <ol>
+      <li><strong>Discover:</strong> Find books through smart, API-powered search.</li>
+      <li><strong>Organize:</strong> Curate by status, genre, rating, and author focus.</li>
+      <li><strong>Execute:</strong> Track progress and complete your reading goals.</li>
+    </ol>
+  </section>
+
+  <section class="trust-strip">
+    <article>
+      <h4>Fast UI</h4>
+      <p>Lazy-loaded routes and responsive cards for smooth browsing.</p>
+    </article>
+    <article>
+      <h4>Reliable Data</h4>
+      <p>Typed models and consistent in-memory state management.</p>
+    </article>
+    <article>
+      <h4>Modern Stack</h4>
+      <p>Angular 17 standalone architecture with scalable components.</p>
+    </article>
+  </section>
+</section>

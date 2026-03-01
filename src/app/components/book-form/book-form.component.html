@@ -1,0 +1,118 @@
+<div class="p-4 max-w-2xl mx-auto">
+  <h2 class="text-2xl font-semibold mb-4">
+    {{ mode === 'add' ? 'Add Book' : 'Edit Book' }}
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+    <div>
+      <label class="block mb-1">Title</label>
+      <input
+        formControlName="title"
+        class="w-full p-2 border rounded"
+        type="text"
+      />
+      <div *ngIf="title?.invalid && title?.touched" class="text-red-600 text-sm">
+        <span *ngIf="title?.errors?.['required']">Title is required.</span>
+        <span *ngIf="title?.errors?.['minlength']">Title must be at least 2 characters.</span>
+      </div>
+    </div>
+
+    <div>
+      <label class="block mb-1">Author</label>
+      <input
+        formControlName="author"
+        class="w-full p-2 border rounded"
+        type="text"
+      />
+      <div *ngIf="author?.invalid && author?.touched" class="text-red-600 text-sm">
+        <span *ngIf="author?.errors?.['required']">Author is required.</span>
+        <span *ngIf="author?.errors?.['mustContainLetter']">Author must contain letters.</span>
+        <span *ngIf="author?.errors?.['numericOnly']">Author cannot be numbers only.</span>
+      </div>
+    </div>
+
+    <div>
+      <label class="block mb-1">Status</label>
+      <select formControlName="status" class="w-full p-2 border rounded">
+        <option value="">Select...</option>
+        <option value="want-to-read">Want to Read</option>
+        <option value="currently-reading">Currently Reading</option>
+        <option value="finished">Finished</option>
+        <option value="want-to-reread">Want to Re-read</option>
+      </select>
+      <div *ngIf="status?.invalid && status?.touched" class="text-red-600 text-sm">
+        Status is required.
+      </div>
+    </div>
+
+    <div>
+      <label class="block mb-1">Genre</label>
+      <input formControlName="genre" class="w-full p-2 border rounded" type="text" />
+      <div *ngIf="genre?.invalid && genre?.touched" class="text-red-600 text-sm">
+        <span *ngIf="genre?.errors?.['optionalMustContainLetter']">Genre must include letters.</span>
+        <span *ngIf="genre?.errors?.['optionalNumericOnly']">Genre cannot be numbers only.</span>
+      </div>
+    </div>
+
+    <div>
+      <label class="block mb-1">Page count</label>
+      <input
+        formControlName="pageCount"
+        class="w-full p-2 border rounded"
+        type="number"
+      />
+      <div *ngIf="pageCount?.invalid && pageCount?.touched" class="text-red-600 text-sm">
+        Page count must be at least 1.
+      </div>
+    </div>
+
+    <div>
+      <label class="block mb-1">Publication year</label>
+      <input
+        formControlName="publicationYear"
+        class="w-full p-2 border rounded"
+        type="number"
+      />
+    </div>
+
+    <div>
+      <label class="block mb-1">ISBN</label>
+      <input formControlName="isbn" class="w-full p-2 border rounded" type="text" />
+      <div *ngIf="isbn?.invalid && isbn?.touched" class="text-red-600 text-sm">
+        ISBN must be 10 or 13 digits.
+      </div>
+    </div>
+
+    <div>
+      <label class="block mb-1">Cover URL</label>
+      <input formControlName="coverUrl" class="w-full p-2 border rounded" type="text" />
+    </div>
+
+    <div>
+      <label class="block mb-1">Rating</label>
+      <input
+        formControlName="rating"
+        class="w-full p-2 border rounded"
+        type="number"
+        min="1"
+        max="5"
+      />
+      <div *ngIf="rating?.invalid && rating?.touched" class="text-red-600 text-sm">
+        Rating must be 1–5.
+      </div>
+    </div>
+
+    <div>
+      <label class="block mb-1">Notes</label>
+      <textarea formControlName="notes" class="w-full p-2 border rounded"></textarea>
+    </div>
+
+    <button
+      type="submit"
+      class="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+      [disabled]="form.invalid"
+    >
+      {{ mode === 'add' ? 'Add' : 'Save' }}
+    </button>
+  </form>
+</div>

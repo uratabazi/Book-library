@@ -1,0 +1,16 @@
+<header class="app-header bg-white border-b">
+	<div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+		<a routerLink="/" class="brand-link">
+			<span class="brand-dot"></span>
+			<span class="text-xl font-semibold">Book Library</span>
+		</a>
+
+		<nav class="main-nav flex gap-4 text-sm">
+			<a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+			<a routerLink="/library" routerLinkActive="active">Library</a>
+			<a routerLink="/search" routerLinkActive="active">Search</a>
+			<a routerLink="/add" routerLinkActive="active">Add Book</a>
+			<a routerLink="/about" routerLinkActive="active">About</a>
+		</nav>
+	</div>
+</header>

@@ -1,0 +1,89 @@
+<section class="details-shell">
+  <ng-container *ngIf="loading">
+    <div class="details-card skeleton-shell" aria-label="Loading book details">
+      <div class="skeleton-line skeleton-title"></div>
+      <div class="skeleton-line skeleton-subtitle"></div>
+      <div class="skeleton-grid">
+        <div class="skeleton-cover"></div>
+        <div class="skeleton-meta">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line"></div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="error && !loading">
+    <div class="state-card error">{{ error }}</div>
+  </ng-container>
+
+  <ng-container *ngIf="book$ | async as book">
+    <article *ngIf="book; else noBook" class="details-card">
+      <header class="details-head">
+        <div>
+          <p class="eyebrow">Book Profile</p>
+          <h1>{{ book.title }}</h1>
+          <p class="author">{{ book.author }}</p>
+          <app-status-badge [status]="book.status"></app-status-badge>
+        </div>
+      </header>
+
+      <section class="details-actions" aria-label="Book actions">
+        <button type="button" class="btn btn-ghost" (click)="onBack()">Back</button>
+        <button type="button" class="btn btn-primary" (click)="onEdit()">Edit</button>
+        <button type="button" class="btn btn-danger" (click)="onDelete()">Delete</button>
+      </section>
+
+      <section class="details-grid">
+        <div class="cover-wrap" *ngIf="book.coverUrl; else coverFallback">
+          <img [src]="book.coverUrl" [alt]="book.title" />
+        </div>
+        <ng-template #coverFallback>
+          <div class="cover-wrap cover-fallback">No cover image</div>
+        </ng-template>
+
+        <div class="meta-wrap">
+          <div class="meta-grid">
+            <article *ngIf="book.genre">
+              <span>Genre</span>
+              <strong>{{ book.genre }}</strong>
+            </article>
+            <article *ngIf="book.pageCount">
+              <span>Pages</span>
+              <strong>{{ book.pageCount }}</strong>
+            </article>
+            <article *ngIf="book.publicationYear">
+              <span>Published</span>
+              <strong>{{ book.publicationYear }}</strong>
+            </article>
+            <article *ngIf="book.isbn">
+              <span>ISBN</span>
+              <strong>{{ book.isbn }}</strong>
+            </article>
+          </div>
+
+          <section class="content-block" *ngIf="book.description">
+            <h3>Description</h3>
+            <p>{{ book.description }}</p>
+          </section>
+
+          <section class="content-block" *ngIf="book.status === 'finished' && book.rating">
+            <h3>Rating</h3>
+            <app-rating-display [rating]="book.rating"></app-rating-display>
+          </section>
+
+          <section class="content-block" *ngIf="book.notes">
+            <h3>Notes</h3>
+            <p>{{ book.notes }}</p>
+          </section>
+        </div>
+      </section>
+    </article>
+  </ng-container>
+
+  <ng-template #noBook>
+    <div class="state-card">No book to display.</div>
+  </ng-template>
+</section>
