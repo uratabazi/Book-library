@@ -3,6 +3,7 @@ import {
   Output,
   EventEmitter,
   OnInit,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -35,6 +36,8 @@ interface FilterPreset {
   styleUrl: './book-list.component.scss',
 })
 export class BookListComponent implements OnInit {
+  private readonly bookService = inject(BookService);
+
   filterByStatus?: string;
   filterByGenre?: string;
   filterByAuthor?: string;
@@ -72,7 +75,6 @@ export class BookListComponent implements OnInit {
   error: string | null = null;
 
   constructor(
-    private bookService: BookService,
     private router: Router
   ) {}
 
@@ -121,22 +123,22 @@ export class BookListComponent implements OnInit {
   refreshBooks(): void {
     this.error = null;
     this.books$ = this.bookService.getAllBooks().pipe(
-      tap((books) => {
+      tap((books: Book[]) => {
         this.availableGenres = [...new Set(
           books
-            .map((book) => book.genre?.trim())
-            .filter((genre): genre is string => Boolean(genre))
+            .map((book: Book) => book.genre?.trim())
+            .filter((genre: string | undefined): genre is string => Boolean(genre))
         )].sort((a, b) => a.localeCompare(b));
 
         this.availableAuthors = [...new Set(
           books
-            .map((book) => book.author?.trim())
-            .filter((author): author is string => Boolean(author))
+            .map((book: Book) => book.author?.trim())
+            .filter((author: string | undefined): author is string => Boolean(author))
         )].sort((a, b) => a.localeCompare(b));
       }),
-      map((books) => this.applyFiltersAndSort(books)),
-      catchError((err) => {
-        this.error = err?.message || 'Unable to load books';
+      map((books: Book[]) => this.applyFiltersAndSort(books)),
+      catchError((err: unknown) => {
+        this.error = err instanceof Error ? err.message : 'Unable to load books';
         return of([]);
       })
     );

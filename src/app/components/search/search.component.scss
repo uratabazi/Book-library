@@ -92,10 +92,6 @@
   cursor: pointer;
 }
 
-.suggest-chip:hover {
-  background: #dbeafe;
-}
-
 .surprise-btn {
   border: 1px solid #cbd5e1;
   border-radius: 10px;
@@ -104,10 +100,6 @@
   padding: 0.5rem 0.8rem;
   font-weight: 700;
   cursor: pointer;
-}
-
-.surprise-btn:hover {
-  background: #f8fafc;
 }
 
 .search-form {
@@ -353,58 +345,5 @@
 
   .result-actions a {
     text-align: center;
-  }
-}
-
-@media (max-width: 375px) {
-  .search-shell {
-    padding: 0.75rem;
-  }
-
-  .chip-strip {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    width: 100%;
-    gap: 0.32rem;
-  }
-
-  .suggest-chip {
-    width: 100%;
-    text-align: center;
-    padding: 0.38rem 0.35rem;
-    font-size: 0.75rem;
-  }
-
-  .mood-row {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.32rem;
-  }
-
-  .mood-label {
-    grid-column: 1 / -1;
-    margin-bottom: 0.1rem;
-  }
-
-  .mood-chip {
-    width: 100%;
-    justify-content: center;
-    padding: 0.4rem 0.35rem;
-    font-size: 0.75rem;
-  }
-
-  .search-form input,
-  .search-form button,
-  .surprise-btn {
-    min-height: 40px;
-  }
-
-  .toolbar p {
-    font-size: 0.82rem;
-  }
-
-  .pager button {
-    padding: 0.54rem 0.5rem;
-    font-size: 0.78rem;
   }
 }

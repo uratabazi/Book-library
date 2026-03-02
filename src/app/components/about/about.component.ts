@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BookService } from '../../services/book.service';
 import { StatsService } from '../../services/stats.service';
 import { RouterLink } from '@angular/router';
+import { Book } from '../../models/book.model';
 
 @Component({
   selector: 'app-about',
@@ -14,6 +15,8 @@ import { RouterLink } from '@angular/router';
   styleUrl: './about.component.scss',
 })
 export class AboutComponent {
+  private readonly bookService = inject(BookService);
+
   readonly stats$: Observable<{
     totalBooks: number;
     wantToRead: number;
@@ -86,12 +89,9 @@ export class AboutComponent {
     },
   ];
 
-  constructor(
-    private bookService: BookService,
-    private statsService: StatsService
-  ) {
+  constructor(private statsService: StatsService) {
     this.stats$ = this.bookService
       .getAllBooks()
-      .pipe(map((books) => this.statsService.getStats(books)));
+      .pipe(map((books: Book[]) => this.statsService.getStats(books)));
   }
 }

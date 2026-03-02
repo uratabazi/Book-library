@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -30,6 +30,8 @@ interface MoodFilter {
 })
 export class SearchComponent {
   private readonly defaultPlaceholder = 'e.g. Dune, Tolkien, clean architecture';
+  private readonly bookService = inject(BookService);
+
   private localResultPool: SearchItem[] = [];
   private showingLocalPool = false;
 
@@ -98,7 +100,6 @@ export class SearchComponent {
 
   constructor(
     private searchService: SearchService,
-    private bookService: BookService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -129,7 +130,7 @@ export class SearchComponent {
     this.bookService
       .getAllBooks()
       .pipe(take(1))
-      .subscribe((books) => {
+      .subscribe((books: Book[]) => {
         const localFiltered = this.searchLocalBooks(books, normalizedQuery, this.scope);
         const localSorted = this.sortLocalBooks(localFiltered, normalizedQuery, this.scope);
         this.localResultPool = localSorted.map((book) => this.toSearchItem(book));
@@ -157,7 +158,7 @@ export class SearchComponent {
     this.bookService
       .getAllBooks()
       .pipe(take(1))
-      .subscribe((books) => {
+      .subscribe((books: Book[]) => {
         if (!books.length) {
           this.error = 'Your library is empty. Add a few books first.';
           this.results = [];
@@ -217,7 +218,7 @@ export class SearchComponent {
     this.bookService
       .getAllBooks()
       .pipe(take(1))
-      .subscribe((books) => {
+      .subscribe((books: Book[]) => {
         const existing = this.findMatchingBook(books, item);
         if (existing) {
           this.goToDetails(existing.id, existing);
@@ -263,7 +264,7 @@ export class SearchComponent {
     };
 
     this.bookService.addBook(book).subscribe({
-      next: (savedBook) => {
+      next: (savedBook: Book) => {
         this.addedIds.add(item.id);
         const message =
           savedBook.status === 'want-to-reread'
@@ -274,8 +275,9 @@ export class SearchComponent {
           this.goToDetails(savedBook.id, savedBook);
         }
       },
-      error: (err) => {
-        this.snackBar.open(err?.message || 'Could not add book.', 'Close', { duration: 2400 });
+      error: (err: unknown) => {
+        const message = err instanceof Error ? err.message : 'Could not add book.';
+        this.snackBar.open(message, 'Close', { duration: 2400 });
       },
     });
   }
@@ -351,7 +353,7 @@ export class SearchComponent {
     this.bookService
       .getAllBooks()
       .pipe(take(1))
-      .subscribe((books) => {
+      .subscribe((books: Book[]) => {
         const filtered = this.searchLocalBooks(books, normalizedQuery, scope);
         const sorted = this.sortLocalBooks(filtered, normalizedQuery, scope);
 
@@ -504,7 +506,7 @@ export class SearchComponent {
     this.bookService
       .getAllBooks()
       .pipe(take(1))
-      .subscribe((books) => {
+      .subscribe((books: Book[]) => {
         const filtered = this.searchLocalBooks(books, query, this.scope);
         const sorted = this.sortLocalBooks(filtered, query, this.scope);
 

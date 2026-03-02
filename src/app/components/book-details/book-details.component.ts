@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
@@ -24,6 +24,8 @@ import { RatingDisplayComponent } from '../../shared/rating-display/rating-displ
   styleUrls: ['./book-details.component.scss'],
 })
 export class BookDetailsComponent implements OnInit {
+  private readonly bookService = inject(BookService);
+
   book$!: Observable<Book | null>;
   loading = true;
   error: string | null = null;
@@ -32,7 +34,6 @@ export class BookDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private bookService: BookService,
     private dialog: MatDialog
   ) {}
 
@@ -57,7 +58,7 @@ export class BookDetailsComponent implements OnInit {
         take(1),
         tap(() => (this.loading = false)),
         catchError((err) => {
-          this.error = err?.message || 'Could not load book';
+          this.error = err instanceof Error ? err.message : 'Could not load book';
           this.loading = false;
           return of(null);
         })
@@ -81,7 +82,9 @@ export class BookDetailsComponent implements OnInit {
       if (result === 'confirm' && this.id) {
         this.bookService.deleteBook(this.id).subscribe({
           next: () => this.router.navigate(['/library']),
-          error: (err) => (this.error = err?.message || 'Delete failed'),
+          error: (err: unknown) => {
+            this.error = err instanceof Error ? err.message : 'Delete failed';
+          },
         });
       }
     });

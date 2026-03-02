@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -27,6 +27,7 @@ import { Book } from '../../models/book.model';
 })
 export class BookFormComponent implements OnInit {
   private readonly containsLetterRegex = /\p{L}/u;
+  private readonly bookService = inject(BookService);
 
   form!: FormGroup;
   id?: string | number;
@@ -36,7 +37,6 @@ export class BookFormComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private bookService: BookService,
     private snackBar: MatSnackBar
   ) {}
 
@@ -128,8 +128,9 @@ export class BookFormComponent implements OnInit {
         );
         this.router.navigate(['/library']);
       },
-      error: (err) => {
-        this.snackBar.open(err?.message || 'Operation failed', 'Close');
+      error: (err: unknown) => {
+        const message = err instanceof Error ? err.message : 'Operation failed';
+        this.snackBar.open(message, 'Close');
       },
     });
   }

@@ -1,3 +1,14 @@
 [build]
   command = "npm run build -- --watch=false"
   publish = "dist/book-library/browser"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://my-json-server.typicode.com/uratabazi/Book-library/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -20,10 +20,27 @@ npm install
 
 ### Run (Development)
 ```bash
+npm run mock:server
 npm run start
 ```
 
-Open the app in your browser using the URL shown by Angular dev server (commonly `http://localhost:4200` or next available port).
+Run these commands in two separate terminals. Then open the app in your browser using the URL shown by Angular dev server (commonly `http://localhost:4200` or next available port).
+
+### Quick Start (Recommended)
+
+1) Open terminal in project root and start mock backend:
+```bash
+npm run mock:server
+```
+
+2) Open a second terminal in project root and start Angular app:
+```bash
+npm run start
+```
+
+3) Open your browser:
+- App: `http://localhost:4200`
+- Mock backend check: `http://localhost:3001/books`
 
 ### Build (Production)
 ```bash
@@ -83,7 +100,12 @@ npm run test
 
 ## API Keys / Configuration
 
-This project currently calls Google Books public endpoint directly:
+This project uses a mock backend for library data via `json-server`:
+- Local API: `http://localhost:3001/books`
+- App proxy path (used by Angular app): `/api/books`
+- Seeded mock dataset: `32` books with full metadata in `db.json`
+
+It also calls Google Books public endpoint directly:
 - `https://www.googleapis.com/books/v1/volumes`
 
 No API key is required for the current setup.
@@ -124,8 +146,21 @@ Screenshots are committed in the repository root and render in Markdown preview/
 
 ## Known Issues / Limitations
 
-- One non-blocking production warning remains: `search.component.scss` exceeds the Angular component-style warning budget (`4kB`) by a small margin.
-- Data is maintained in-memory in the service during runtime; it resets when the app restarts.
+- For local development, the mock backend (`json-server`) must be running for full CRUD functionality.
+- On the public Netlify demo, `/api` is proxied to a public mock backend, so write operations may not be fully persistent.
+
+## Library Data (Current)
+
+- The library is backend-driven (mock backend), not hardcoded in service code.
+- `BookService` performs HTTP CRUD against the backend (`GET`, `POST`, `PUT`, `DELETE`).
+- The mock backend currently starts with 32 books across mixed statuses (`want-to-read`, `currently-reading`, `finished`, `want-to-reread`).
+- Added/edited/deleted books persist while `json-server` is running and are written to `db.json`.
+
+## Instructor Requirement Addressed
+
+- Requirement: books must be loaded from backend (mock backend allowed).
+- Implemented: replaced in-code seed loading with HTTP-backed loading from `json-server` (`db.json`) through `BookService`.
+- Result: all library CRUD flows now read/write through backend endpoints instead of hardcoded service arrays.
 
 ## Reflection
 

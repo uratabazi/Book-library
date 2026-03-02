@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -35,10 +35,11 @@ interface DashboardViewModel {
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
+  private readonly bookService = inject(BookService);
+
   readonly vm$: Observable<DashboardViewModel>;
 
   constructor(
-    private bookService: BookService,
     private statsService: StatsService,
     private router: Router
   ) {
