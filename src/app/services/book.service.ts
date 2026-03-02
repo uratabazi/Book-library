@@ -4,11 +4,14 @@ import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, finalize, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { Book, BookStatus } from '../models/book.model';
 
+type BooksApiResponse = Book[] | { books: Book[] };
+
 @Injectable({
   providedIn: 'root',
 })
 export class BookService {
   private readonly apiUrl = this.resolveApiUrl();
+  private readonly readOnlyMode = this.apiUrl.endsWith('.json');
 
   private booksSubject = new BehaviorSubject<Book[]>([]);
   public allBooks$ = this.booksSubject.asObservable();
@@ -28,7 +31,7 @@ export class BookService {
       }
     }
 
-    return '/api/books';
+    return '/db.json';
   }
 
   getAllBooks(): Observable<Book[]> {
@@ -53,6 +56,12 @@ export class BookService {
   }
 
   addBook(book: Book): Observable<Book> {
+    if (this.readOnlyMode) {
+      return throwError(
+        () => new Error('Live demo is read-only. Run local mock server for full CRUD.')
+      );
+    }
+
     const validationError = this.validateBookForAdd(book);
     if (validationError) {
       return throwError(() => new Error(validationError));
@@ -105,6 +114,12 @@ export class BookService {
   }
 
   updateBook(id: string | number, book: Book): Observable<Book> {
+    if (this.readOnlyMode) {
+      return throwError(
+        () => new Error('Live demo is read-only. Run local mock server for full CRUD.')
+      );
+    }
+
     return this.getAllBooks().pipe(
       take(1),
       switchMap((currentBooks) => {
@@ -136,6 +151,12 @@ export class BookService {
   }
 
   deleteBook(id: string | number): Observable<void> {
+    if (this.readOnlyMode) {
+      return throwError(
+        () => new Error('Live demo is read-only. Run local mock server for full CRUD.')
+      );
+    }
+
     return this.getAllBooks().pipe(
       take(1),
       switchMap((currentBooks) => {
@@ -164,7 +185,8 @@ export class BookService {
       return this.loading$;
     }
 
-    this.loading$ = this.http.get<Book[]>(this.apiUrl).pipe(
+    this.loading$ = this.http.get<BooksApiResponse>(this.apiUrl).pipe(
+      map((response) => ('books' in response ? response.books : response)),
       map((books) => books.map((book) => this.normalizeBook(book))),
       tap((books) => {
         this.booksSubject.next(books);
